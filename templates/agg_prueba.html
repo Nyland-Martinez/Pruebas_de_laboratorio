@@ -8,14 +8,25 @@
 </head>
 <body>
     {% block content %}
-    <form action="{{ url_for('nueva_prueba') }}" method="post">
-       
-        <label>Observaciones:</label>
-        <textarea name="observaciones"></textarea><br>
+    <h1>Agregar Prueba</h1>
+    <form action="{{ url_for('agg_prueba'), id_paciente=id_paciente }}" method="POST">
+        <label>Tipo de prueba:</label>
+        <select id="nombre_tipo_prueba" name="nombre_tipo_prueba" required>
+            <option value="Hemograma">Hemograma</option>
+            <option value="Perfil Lipídico">Perfil Lipídico</option>
+            <option value="Glucosa en sangre">Glucosa en sangre</option>
+        </select><br>
         
-        <input type="submit" value="Registrar Prueba">
+        <label>Fecha de la prueba:</label>
+        <input type="text" id="fecha" name="fecha" required><br>
+
+        <label>Descripción:</label>
+        <textarea id="descripcion" name="descripcion" required></textarea><br>
+        
+        <button class="btn-agg" type="submit">Enviar</button>
     </form>
-    <a href="{{ url_for('index')}}">Volver a la página de inicio</a>
+    
+    <a href="{{ url_for('pruebas')}}">Volver a la página de pruebas</a>
     {% endblock %}   
 </body>
 </html>

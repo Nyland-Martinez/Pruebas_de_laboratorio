@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% extends "layout.html" %}
+    <title>Lista de resultados de una prueba</title>
+</head>
+<body>
+    {% block content %}
+    <h1>Lista de resultados de una prueba</h1>
+    <a href="{{ url_for('agg_resultados') }}">Agregar detalles</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID de prueba</th>
+                <th>Parámetros</th>
+                <th>Valor</th>
+                <th>Unidad</th>
+                <th>Rango mínimo</th>
+                <th>Rango máximo</th>
+                <th>Acciones</th>
+            </tr> 
+        </thead>
+        <tbody>
+            {% for resultado in resultados %}
+            <tr>
+                <td>{{resultado[1]}}</td>
+                <td>{{resultado[2]}}</td>
+                <td>{{resultado[3]}}</td>
+                <td>{{resultado[4]}}</td>
+                <td>{{resultado[5]}}</td>
+                <td>{{resultado[6]}}</td>
+                <td>
+                    <a href="{{ url_for('update_resultado', id_resultados=resultado[0]) }}" class="btn-edit">Editar</a>
+                    <form action="{{ url_for('delete_resultado', id_resultados=resultado[0]) }}" method="POST" style="display: inline;">
+                        <button class="btn-borrar" type="submit">Borrar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endblock %}
+</body>
+</html>

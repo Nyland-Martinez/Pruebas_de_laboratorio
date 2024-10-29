@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% extends "layout.html" %}
-    <title>Lista de paciente</title>
+    <title>Lista de pacientes</title>
 </head>
 <body>
     {% block content %}
+    <form method="POST" action="/">
+        <input type="text" name="search_query" placeholder="Buscar paciente" required>
+        <button type="submit">Buscar</button>
+    </form>
     <h1>Lista de pacientes</h1>
     <a href="{{ url_for('agg_paciente') }}">Agregar un nuevo paciente</a>
     <table>
@@ -18,6 +22,7 @@
                 <th>Fecha de Nacimiento</th>
                 <th>Dirección</th>
                 <th>Teléfono</th>
+                <th>Acciones</th>
             </tr> 
         </thead>
         <tbody>
@@ -29,17 +34,13 @@
                 <td>{{paciente[4]}}</td>
                 <td>{{paciente[5]}}</td>
                 <td>
-                    <button>
-                        <a href="{{ url_for('update_paciente', id=paciente[0]) }}" method="GET" style="display: inline;">Editar</a>
-                    </button>
-                </td>
-                <td>
-                    <form action="{{ url_for('delete_paciente', id=paciente[0]) }}" method="POST" style="display: inline;">
-                        <button type="submit">Borrar</button>
+                    <a href="{{ url_for('update_paciente', id_paciente=paciente[0]) }}" class="btn-edit">Editar</a>
+                    <form action="{{ url_for('delete_paciente', id_paciente=paciente[0]) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn-borrar">Borrar</button>
                     </form>
                 </td>
-            {% endfor %}
             </tr>
+            {% endfor %}
         </tbody>
     </table>
     {% endblock %}

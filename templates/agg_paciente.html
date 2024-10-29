@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% extends "layout.html" %}
-    <title>Formulario</title>
+    <title>Formulario de paciente</title>
 </head>
 <body>
     {% block content %}
@@ -23,8 +23,8 @@
         
         <label>Teléfono:</label>
         <input type="number" name="telefono" required><br>
-
-        <button class="btn-1" type="submit">Enviar</button>
+        
+        <button class="btn-agg" type="submit">Enviar</button>
     </form>    
     <a href="{{ url_for('index')}}">Volver a la página de inicio</a>
     {% endblock %}

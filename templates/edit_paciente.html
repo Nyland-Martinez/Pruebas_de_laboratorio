@@ -9,24 +9,24 @@
 <body>
     {% block content %}
     <h1>Formulario de edición</h1>
-    <form action="{{ url_for('update_paciente', id=paciente[0]) }}" method="POST">
+    <form action="{{ url_for('update_paciente', id_paciente=paciente[0]) }}" method="POST">
         <label for="name">Nombre:</label>
-        <input type="text" id="name" name="nombre" value="{{paciente[1]}}" required><br>
+        <input type="text" id="name" name="nombre" value="{{ paciente[1] }}" required><br>
         
         <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" name="apellido" value="{{paciente[2]}}" required><br>
+        <input type="text" id="apellido" name="apellido" value="{{ paciente[2] }}" required><br>
         
         <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-        <input type="text" id="apellido" name="fecha_nacimiento" value="{{paciente[3]}}" required><br>
+        <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ paciente[3] }}" required><br>
         
         <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" value="{{paciente[4]}}" required><br>
+        <input type="text" id="direccion" name="direccion" value="{{ paciente[4] }}" required><br>
         
         <label for="telefono">Teléfono:</label>
-        <input type="number" id="telefono" name="telefono" value="{{paciente[5]}}" required><br>
+        <input type="number" id="telefono" name="telefono" value="{{ paciente[5] }}" required><br>
         
-        <button type="submit">Actualizar</button>
-    </form> 
+        <button class="btn-edit" type="submit">Actualizar</button>
+    </form>    
     <a href="{{ url_for('index')}}">Volver a la página de inicio</a>
     {% endblock %}
 </body>
