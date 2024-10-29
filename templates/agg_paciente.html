@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% extends "layout.html" %}
+    <title>Formulario</title>
+</head>
+<body>
+    {% block content %}
+    <form action="{{ url_for('agg_paciente') }}" method="POST">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required><br>
+        
+        <label>Apellido:</label>
+        <input type="text" name="apellido" required><br>
+        
+        <label>Fecha de Nacimiento:</label>
+        <input type="text" name="fecha_nacimiento" required><br>
+        
+        <label>Dirección:</label>
+        <input type="text" name="direccion" required><br>
+        
+        <label>Teléfono:</label>
+        <input type="number" name="telefono" required><br>
+
+        <button class="btn-1" type="submit">Enviar</button>
+    </form>    
+    <a href="{{ url_for('index')}}">Volver a la página de inicio</a>
+    {% endblock %}
+</body>
+</html>

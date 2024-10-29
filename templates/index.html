@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% extends "layout.html" %}
+    <title>Lista de paciente</title>
+</head>
+<body>
+    {% block content %}
+    <h1>Lista de pacientes</h1>
+    <a href="{{ url_for('agg_paciente') }}">Agregar un nuevo paciente</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+            </tr> 
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
+                <td>{{paciente[1]}}</td>
+                <td>{{paciente[2]}}</td>
+                <td>{{paciente[3]}}</td>
+                <td>{{paciente[4]}}</td>
+                <td>{{paciente[5]}}</td>
+                <td>
+                    <button>
+                        <a href="{{ url_for('update_paciente', id=paciente[0]) }}" method="GET" style="display: inline;">Editar</a>
+                    </button>
+                </td>
+                <td>
+                    <form action="{{ url_for('delete_paciente', id=paciente[0]) }}" method="POST" style="display: inline;">
+                        <button type="submit">Borrar</button>
+                    </form>
+                </td>
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    {% endblock %}
+</body>
+</html>

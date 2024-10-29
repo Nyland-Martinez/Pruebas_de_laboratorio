@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% extends "layout.html" %}
+    <title>Formulario de pruebas</title>
+</head>
+<body>
+    {% block content %}
+    <form action="{{ url_for('nueva_prueba') }}" method="post">
+       
+        <label>Observaciones:</label>
+        <textarea name="observaciones"></textarea><br>
+        
+        <input type="submit" value="Registrar Prueba">
+    </form>
+    <a href="{{ url_for('index')}}">Volver a la página de inicio</a>
+    {% endblock %}   
+</body>
+</html>
