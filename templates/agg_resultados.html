@@ -8,9 +8,8 @@
 </head>
 <body>
     {% block content %}
-    <h1>Agregar resultado a una prueba</h1>
+    <h1>Agregar Resultados para la Prueba ID: {{ id_prueba }}</h1>
     <form action="{{ url_for('agg_resultados', id_prueba=id_prueba) }}" method="POST">
-        
         <label>Parámetro:</label>
         <input type="text" id="parametro" name="parametro" required><br>
         
@@ -27,8 +26,8 @@
         <input type="number" id="rango_max" step="0.01" name="rango_max" required><br>
         
         <button class="btn-agg" type="submit">Enviar</button>
-    </form>    
-    <a href="{{ url_for('resultados')}}">Volver a la página de resultados</a>
+    </form>
+    <a href="{{ url_for('resultados', id_prueba=id_prueba) }}">Volver a la página de resultados</a>
     {% endblock %}
 </body>
 </html>

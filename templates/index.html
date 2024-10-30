@@ -38,6 +38,10 @@
                     <form action="{{ url_for('delete_paciente', id_paciente=paciente[0]) }}" method="POST" style="display: inline;">
                         <button type="submit" class="btn-borrar">Borrar</button>
                     </form>
+                    <a href="{{ url_for('agg_prueba', id_paciente=paciente[0]) }}" class="btn-agg">Agregar prueba</a>
+                    <td>
+                        <a href="{{ url_for('pruebas', id_paciente=paciente[0]) }}">Ver Pruebas</a>
+                    </td>
                 </td>
             </tr>
             {% endfor %}

@@ -34,22 +34,23 @@ def index():
     return render_template('index.html', pacientes=pacientes)
 
 # Leer prueba
-@app.route('/pruebas')
-def pruebas():
+@app.route('/pruebas/<int:id_paciente>')
+def pruebas(id_paciente):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM Pruebas")
+    cursor.execute("SELECT * FROM Pruebas WHERE id_paciente = %s", (id_paciente,))
     pruebas = cursor.fetchall()
     cursor.close()
-    return render_template('pruebas.html', pruebas=pruebas)
+    return render_template('pruebas.html', id_paciente=id_paciente, pruebas=pruebas)
 
 # Leer resultados de una prueba
-@app.route('/resultados')
-def resultados():
+@app.route('/resultados/<int:id_prueba>')
+def resultados(id_prueba):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM Resultados")
+    cursor.execute("SELECT * FROM Resultados WHERE id_prueba = %s", (id_prueba,))
     resultados = cursor.fetchall()
     cursor.close()
-    return render_template('resultados.html', resultados=resultados)
+    return render_template('resultados.html', id_prueba=id_prueba, resultados=resultados)
+
 
 # Ruta para agregar un nuevo paciente
 @app.route('/agg_paciente', methods=['GET', 'POST'])
@@ -76,24 +77,25 @@ def agg_paciente():
 @app.route('/agg_prueba/<int:id_paciente>', methods=['GET', 'POST'])
 def agg_prueba(id_paciente):
     if request.method == 'POST':
-        id_paciente = request.form['id_paciente']
+        # No necesitas volver a asignar id_paciente
         nombre_tipo_prueba = request.form['nombre_tipo_prueba']
         fecha = request.form['fecha']
         descripcion = request.form['descripcion']
         
         cursor = mysql.connection.cursor()
-        cursor.execute("""
+        cursor.execute(""" 
             INSERT INTO Pruebas (id_paciente, nombre_tipo_prueba, fecha, descripcion) 
             VALUES (%s, %s, %s, %s)
-        """, (id_paciente, fecha, nombre_tipo_prueba, descripcion))
+        """, (id_paciente, nombre_tipo_prueba, fecha, descripcion)) 
+
         mysql.connection.commit()
 
         # Obtener el último ID de prueba insertado
         id_prueba = cursor.lastrowid
         cursor.close()
         
-        # Redirigir para agregar detalles a esta prueba específica
-        return redirect(url_for('agg_detalles', id_prueba=id_prueba))
+        # Redirigir para agregar resultados a esta prueba específica
+        return redirect(url_for('agg_resultados', id_prueba=id_prueba))
 
     return render_template('agg_prueba.html', id_paciente=id_paciente)
 
@@ -101,7 +103,6 @@ def agg_prueba(id_paciente):
 @app.route('/agg_resultados/<int:id_prueba>', methods=['GET', 'POST'])
 def agg_resultados(id_prueba):
     if request.method == 'POST':
-        id_prueba = request.form['id_prueba']
         parametro = request.form['parametro']
         valor = request.form['valor']
         unidad = request.form['unidad']
@@ -109,14 +110,17 @@ def agg_resultados(id_prueba):
         rango_max = request.form['rango_max']
         
         cursor = mysql.connection.cursor()
-        cursor.execute("""
+        cursor.execute(""" 
             INSERT INTO Resultados (id_prueba, parametro, valor, unidad, rango_min, rango_max)
             VALUES (%s, %s, %s, %s, %s, %s)
         """, (id_prueba, parametro, valor, unidad, rango_min, rango_max))
         mysql.connection.commit()
         cursor.close()
+
+        print(f"Resultado agregado para la prueba ID: {id_prueba}")  # Mensaje de depuración
         
-        return redirect(url_for('agg_resultados', id_prueba=id_prueba))
+        # Redirigir a la página de resultados después de agregar un resultado
+        return redirect(url_for('resultados', id_prueba=id_prueba))
 
     return render_template('agg_resultados.html', id_prueba=id_prueba)
 
@@ -193,15 +197,17 @@ def update_resultado(id_resultados):
         rango_min = request.form['rango_min']
         rango_max = request.form['rango_max']
 
-        cursor.execute("""
+        cursor = mysql.connection.cursor()
+        cursor.execute(""" 
             UPDATE Resultados SET id_prueba=%s, parametro=%s, valor=%s, unidad=%s, rango_min=%s, rango_max=%s
-            WHERE id_prueba=%s
+            WHERE id_resultados=%s  # Cambiado a id_resultados
         """, (id_prueba, parametro, valor, unidad, rango_min, rango_max, id_resultados))
         mysql.connection.commit()
         cursor.close()
-        return redirect(url_for('resultados'))
 
-    return render_template('edit_resultados.html', resultado=resultado)
+        return redirect(url_for('resultados', id_prueba=id_prueba))
+
+    return render_template('edit_resultado.html', resultado=resultado)
 
 # Eliminar paciente
 @app.route('/delete_paciente/<int:id_paciente>', methods=['GET', 'POST'])

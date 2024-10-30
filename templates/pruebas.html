@@ -9,7 +9,7 @@
 <body>
     {% block content %}
     <h1>Lista de pruebas</h1>
-    <a href="{{ url_for('agg_prueba') }}">Agregar una nueva prueba</a>
+    <a href="{{ url_for('agg_prueba', id_paciente=id_paciente) }}">Agregar una nueva prueba</a>
     <table>
         <thead>
             <tr>

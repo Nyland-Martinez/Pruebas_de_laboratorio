@@ -9,7 +9,7 @@
 <body>
     {% block content %}
     <h1>Agregar Prueba</h1>
-    <form action="{{ url_for('agg_prueba'), id_paciente=id_paciente }}" method="POST">
+    <form action="{{ url_for('agg_prueba', id_paciente=id_paciente) }}" method="POST">
         <label>Tipo de prueba:</label>
         <select id="nombre_tipo_prueba" name="nombre_tipo_prueba" required>
             <option value="Hemograma">Hemograma</option>
@@ -26,7 +26,7 @@
         <button class="btn-agg" type="submit">Enviar</button>
     </form>
     
-    <a href="{{ url_for('pruebas')}}">Volver a la página de pruebas</a>
+    <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}">Volver a la página de pruebas</a>
     {% endblock %}   
 </body>
 </html>
