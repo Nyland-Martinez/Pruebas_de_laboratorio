@@ -9,7 +9,7 @@
 <body>
     {% block content %}
     <h1>Formulario de edición de resultado</h1>
-    <form action="{{ url_for('update_resultado', id_resultados=resultado[0]) }}" method="POST">
+    <form action="{{ url_for('update_resultado', id_resultados=id_resultados) }}" method="POST">
 
         <label for="id_prueba">ID de prueba:</label>
         <input type="number" id="id_prueba" name="id_prueba" value="{{ resultado[1] }}" required><br>
@@ -31,7 +31,7 @@
         
         <button class="btn-edit" type="submit">Actualizar</button>
     </form>    
-    <a href="{{ url_for('resultados')}}">Volver a la página de resultados</a>
+    <a href="{{ url_for('resultados', id_prueba=id_prueba) }}">Volver a la página de resultados</a>
     {% endblock %}
 </body>
 </html>

@@ -9,7 +9,7 @@
 <body>
     {% block content %}
     <h1>Formulario de edición de la prueba</h1>
-    <form action="{{ url_for('update_prueba', id_prueba=prueba[0]) }}" method="POST">
+    <form action="{{ url_for('update_prueba', id_prueba=id_prueba) }}" method="POST">
         
         <label for="id_paciente">ID de paciente:</label>
         <input type="number" id="id_paciente" name="id_paciente" value="{{ prueba[1] }}" required><br>
@@ -30,7 +30,7 @@
         
         <button class="btn-edit" type="submit">Actualizar</button>
     </form>    
-    <a href="{{ url_for('pruebas')}}">Volver a la página de pruebas</a>
+    <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}">Volver a la página de pruebas</a>
     {% endblock %}
 </body>
 </html>

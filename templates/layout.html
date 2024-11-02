@@ -12,10 +12,14 @@
     <nav id="menu">
         <ul>
             <li> <a href="/">Inicio</a></li>
+            <li><a href="{{ url_for('index') }}">Ver Pacientes</a></li>
+            <li><a href="{{ url_for('agg_paciente') }}">Agregar Paciente</a></li>
         </ul>
     </nav>
     <div class="container">
-        {% block content %} {% endblock %}
+        {% block content %}
+        
+        {% endblock %}
     </div>
     <footer id="pie"> Derechos Reservados &copy; 2024</footer> 
 

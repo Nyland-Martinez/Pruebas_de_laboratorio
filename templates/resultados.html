@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% extends "layout.html" %}
-    <title>Lista de resultados de una prueba</title>
+    <title>Resultado de una prueba</title>
 </head>
 <body>
-    {% block content %}
-    <h1>Lista de resultados de una prueba</h1>
+{% block content %}
+    <h1>Resultados de la prueba: {{ nombre_tipo_prueba }}</h1>
     <a href="{{ url_for('agg_resultados', id_prueba=id_prueba) }}">Agregar parámetros</a>
+    {% if resultados %}
     <table>
         <thead>
             <tr>
@@ -41,6 +42,10 @@
             {% endfor %}
         </tbody>
     </table>
-    {% endblock %}
+    {% else %}
+    <p>No hay resultado para mostrar.</p>
+    {% endif %}
+    <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}">Volver a la página de pruebas</a>
+{% endblock %}
 </body>
 </html>

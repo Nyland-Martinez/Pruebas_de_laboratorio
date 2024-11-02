@@ -46,11 +46,25 @@ def pruebas(id_paciente):
 @app.route('/resultados/<int:id_prueba>')
 def resultados(id_prueba):
     cursor = mysql.connection.cursor()
+    
+    # Obtener la información necesaria
     cursor.execute("SELECT * FROM Resultados WHERE id_prueba = %s", (id_prueba,))
     resultados = cursor.fetchall()
+    
+    cursor.execute("SELECT id_paciente, nombre_tipo_prueba FROM Pruebas WHERE id_prueba = %s", (id_prueba,))
+    prueba = cursor.fetchone()
     cursor.close()
-    return render_template('resultados.html', id_prueba=id_prueba, resultados=resultados)
+    
+    # Verificar si se encontró la prueba
+    if prueba is None:
+        flash("Prueba no encontrada", "error")
+        return redirect(url_for('index'))
 
+    id_paciente = prueba[0]
+    nombre_tipo_prueba = prueba[1] 
+
+    return render_template('resultados.html', resultados=resultados, id_paciente=id_paciente, 
+                            id_prueba=id_prueba, nombre_tipo_prueba=nombre_tipo_prueba)
 
 # Ruta para agregar un nuevo paciente
 @app.route('/agg_paciente', methods=['GET', 'POST'])
@@ -153,32 +167,39 @@ def update_paciente(id_paciente):
     
     return render_template('edit_paciente.html', paciente=paciente)
 
-# Ruta para actualizar prueba
+# Ruta para actualizar una prueba
 @app.route('/edit_prueba/<int:id_prueba>', methods=['GET', 'POST'])
 def update_prueba(id_prueba):
     cursor = mysql.connection.cursor()
 
-    # Obtener prueba existente
-    cursor.execute("SELECT * FROM Pruebas WHERE id_prueba=%s", (id_prueba,))
+    # Obtener los datos de la prueba y del paciente asociado
+    cursor.execute("SELECT * FROM Pruebas WHERE id_prueba = %s", (id_prueba,))
     prueba = cursor.fetchone()
-    cursor.close()
+    
+    if prueba is None:
+        flash("Prueba no encontrada", "error")
+        return redirect(url_for('index'))  # Redirige a la página principal si no se encuentra la prueba
+
+    id_paciente = prueba[1]  # Asigna el id_paciente desde los datos de la prueba obtenida
+    
     if request.method == 'POST':
-        id_paciente = request.form['id_paciente']
         nombre_tipo_prueba = request.form['nombre_tipo_prueba']
         fecha = request.form['fecha']
         descripcion = request.form['descripcion']
 
         cursor.execute("""
-            UPDATE Pruebas SET id_paciente=%s, nombre_tipo_prueba=%s, fecha=%s, descripcion=%s
-            WHERE id_prueba=%s
-        """, (id_paciente, nombre_tipo_prueba, fecha, descripcion, id_prueba))
+            UPDATE Pruebas 
+            SET nombre_tipo_prueba = %s, fecha = %s, descripcion = %s 
+            WHERE id_prueba = %s
+        """, (nombre_tipo_prueba, fecha, descripcion, id_prueba))
         mysql.connection.commit()
         cursor.close()
 
-        flash('Prueba actualizado exitosamente!')
-        return redirect(url_for('pruebas'))
+        flash('Prueba actualizada exitosamente!', 'success')
+        return redirect(url_for('pruebas', id_paciente=id_paciente))
 
-    return render_template('edit_prueba.html', prueba=prueba)
+    cursor.close()
+    return render_template('edit_prueba.html', prueba=prueba, id_prueba=id_prueba, id_paciente=id_paciente)
 
 # Ruta para actualizar el resultado de una prueba
 @app.route('/edit_resultado/<int:id_resultados>', methods=['GET', 'POST'])
@@ -188,26 +209,35 @@ def update_resultado(id_resultados):
     # Obtener resultado de prueba existente
     cursor.execute("SELECT * FROM Resultados WHERE id_resultados=%s", (id_resultados,))
     resultado = cursor.fetchone()
-    cursor.close()
+
+    # Asegúrate de que se encontró un resultado
+    if resultado is None:
+        flash("Resultado no encontrado", "error")
+        return redirect(url_for('index'))
+
+    # Extraer id_prueba del resultado obtenido
+    id_prueba = resultado[1]  # Asegúrate de que el índice corresponda a id_prueba
+
     if request.method == 'POST':
-        id_prueba = request.form['id_prueba']
+        # Actualizar los valores con los datos del formulario
         parametro = request.form['parametro']
         valor = request.form['valor']
         unidad = request.form['unidad']
         rango_min = request.form['rango_min']
         rango_max = request.form['rango_max']
 
-        cursor = mysql.connection.cursor()
-        cursor.execute(""" 
-            UPDATE Resultados SET id_prueba=%s, parametro=%s, valor=%s, unidad=%s, rango_min=%s, rango_max=%s
-            WHERE id_resultados=%s  # Cambiado a id_resultados
-        """, (id_prueba, parametro, valor, unidad, rango_min, rango_max, id_resultados))
+        cursor.execute("""
+            UPDATE Resultados SET parametro=%s, valor=%s, unidad=%s, rango_min=%s, rango_max=%s
+            WHERE id_resultados=%s
+        """, (parametro, valor, unidad, rango_min, rango_max, id_resultados))
         mysql.connection.commit()
         cursor.close()
 
+        flash('Resultado actualizado exitosamente!', 'success')
         return redirect(url_for('resultados', id_prueba=id_prueba))
 
-    return render_template('edit_resultado.html', resultado=resultado)
+    cursor.close()
+    return render_template('edit_resultado.html', resultado=resultado, id_prueba=id_prueba, id_resultados=id_resultados)
 
 # Eliminar paciente
 @app.route('/delete_paciente/<int:id_paciente>', methods=['GET', 'POST'])
@@ -223,33 +253,52 @@ def delete_paciente(id_paciente):
         flash(f'Error al eliminar el paciente: {str(e)}', 'error')
     return redirect(url_for('index'))
 
-# Eliminar prueba
-@app.route('/delete_prueba/<int:id_prueba>', methods=['GET', 'POST'])
-def delete_prueba(id_prueba):
-    try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM Pruebas WHERE id_prueba=%s", (id_prueba,))
-        mysql.connection.commit()
-        cursor.close()
-        flash('Prueba eliminado exitosamente', 'success')
-    except Exception as e:
-        mysql.connection.rollback()
-        flash(f'Error al eliminar la prueba: {str(e)}', 'error')
-    return redirect(url_for('pruebas'))
-
-# Eliminar resultado
-@app.route('/delete_resultado/<int:id_resultados>', methods=['GET', 'POST'])
+# Ruta para eliminar un resultado específico
+@app.route('/delete_resultado/<int:id_resultados>', methods=['POST'])
 def delete_resultado(id_resultados):
-    try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM Resultados WHERE id_resultados=%s", (id_resultados,))
-        mysql.connection.commit()
-        cursor.close()
-        flash('Resultado de la prueba eliminado exitosamente', 'success')
-    except Exception as e:
-        mysql.connection.rollback()
-        flash(f'Error al eliminar el resultado de la prueba: {str(e)}', 'error')
-    return redirect(url_for('resultados'))
+    cursor = mysql.connection.cursor()
+    
+    # Recuperar id_prueba antes de eliminar el resultado
+    cursor.execute("SELECT id_prueba FROM Resultados WHERE id_resultados = %s", (id_resultados,))
+    resultado = cursor.fetchone()
+    
+    if not resultado:
+        flash("Resultado no encontrado", "error")
+        return redirect(url_for('index'))
+    
+    id_prueba = resultado[0]  
+    
+    # Eliminar el resultado
+    cursor.execute("DELETE FROM Resultados WHERE id_resultados = %s", (id_resultados,))
+    mysql.connection.commit()
+    cursor.close()
+    
+    flash('Resultado eliminado exitosamente', 'success')
+    return redirect(url_for('resultados', id_prueba=id_prueba))
+
+
+# Ruta para eliminar una prueba específica
+@app.route('/delete_prueba/<int:id_prueba>', methods=['POST'])
+def delete_prueba(id_prueba):
+    cursor = mysql.connection.cursor()
+
+    # Verificar si la prueba existe antes de eliminar
+    cursor.execute("SELECT id_paciente FROM Pruebas WHERE id_prueba = %s", (id_prueba,))
+    prueba = cursor.fetchone()
+    
+    if not prueba:
+        flash("Prueba no encontrada", "error")
+        return redirect(url_for('index'))
+    
+    id_paciente = prueba[0]  
+
+    # Eliminar la prueba
+    cursor.execute("DELETE FROM Pruebas WHERE id_prueba = %s", (id_prueba,))
+    mysql.connection.commit()
+    cursor.close()
+    
+    flash('Prueba eliminada exitosamente', 'success')
+    return redirect(url_for('pruebas', id_paciente=id_paciente))
 
 if __name__ == "__main__":
     app.run(debug=True)

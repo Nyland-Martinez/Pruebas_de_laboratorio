@@ -7,9 +7,10 @@
     <title>Lista de pruebas</title>
 </head>
 <body>
-    {% block content %}
+{% block content %}
     <h1>Lista de pruebas</h1>
     <a href="{{ url_for('agg_prueba', id_paciente=id_paciente) }}">Agregar una nueva prueba</a>
+    {% if pruebas %}
     <table>
         <thead>
             <tr>
@@ -34,11 +35,17 @@
                     <form action="{{ url_for('delete_prueba', id_prueba=prueba[0]) }}" method="POST" style="display: inline;">
                         <button class="btn-borrar" type="submit">Borrar</button>
                     </form>
+                    <a href="{{ url_for('resultados', id_prueba=prueba[0]) }}" class="btn-primary">
+                        Resultado
+                    </a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    {% endblock %}
+    {% else %}
+    <p>No hay pruebas para mostrar.</p>
+    {% endif %}
+{% endblock %}
 </body>
 </html>
