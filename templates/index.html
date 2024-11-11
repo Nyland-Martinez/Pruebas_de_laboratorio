@@ -1,80 +1,106 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Lista de pacientes</title>
-</head>
-<body>
-    {% block content %}
-    <main>
-        
-        <section>
-            <form method="POST" action="/">
-                <input type="text" name="search_query" placeholder="Buscar paciente" required>
-                <button type="submit">Buscar</button>
+{% extends "layout.html" %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<main class="container">
+    <!-- Resumen General -->
+    <section id="resumen-general" class="mb-5">
+        <h2 class="text-center mb-4">Resumen General</h2>
+        <p class="text-center">Bienvenido al sistema de gestión de laboratorio. Aquí podrás administrar pacientes, pruebas y resultados.</p>
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner shadow-lg rounded">
+                <div class="carousel-item active">
+                    <img src="{{ url_for('static', filename='images/close-up-researcher-holding-tube.jpg') }}" class="d-block w-100" alt="Investigador con tubo de ensayo">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='images/doctor-performing-medical-research-lab.jpg') }}" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='images/woman-working-laboratory-close-up.jpg') }}" class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    </section>    
+
+    <!-- Gestión de Pacientes -->
+    <section id="pacientes" class="mb-5">
+        <div class="content-container">
+            <h1>Bienvenido a la Gestión de Pacientes</h1>
+            
+            <h3>Ver Pacientes</h3>
+            <p>Visualiza la lista completa de pacientes.</p>
+            <a href="{{ url_for('agg_paciente') }}" class="btn btn-success mb-3">Agregar un nuevo paciente</a>
+            
+            <!-- Formulario de búsqueda -->
+            <form method="POST" action="{{ url_for('index') }}" class="d-flex mb-3">
+                <input type="text" name="search_query" class="form-control" placeholder="Buscar por nombre o apellido" required>
+                <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
-        </section>
 
-        <section>
-            <h2>Introducción</h2>
-            <p>
-                Esta aplicación te permite gestionar pruebas y resultados de forma fácil y eficiente.
-                Puedes agregar pacientes, visualizar pruebas y actualizar resultados.
-            </p>
-        </section>
-
-        <section>
-            <h2>¿Cómo empezar?</h2>
-            <p>
-                Para comenzar, puedes agregar un nuevo paciente o ver las pruebas existentes.
-                Navega a través de los enlaces en el menú de arriba para explorar la aplicación.
-            </p>
-        </section>
-        
-        <section>
-            <h1>Lista de pacientes</h1>
-            <a href="{{ url_for('agg_paciente') }}">Agregar un nuevo paciente</a>
+            <!-- Tabla de Pacientes -->
             {% if pacientes %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr> 
-                </thead>
-                <tbody>
-                    {% for paciente in pacientes %}
-                    <tr>
-                        <td>{{paciente[1]}}</td>
-                        <td>{{paciente[2]}}</td>
-                        <td>{{paciente[3]}}</td>
-                        <td>{{paciente[4]}}</td>
-                        <td>{{paciente[5]}}</td>
-                        <td>
-                            <a href="{{ url_for('update_paciente', id_paciente=paciente[0]) }}" class="btn-edit">Editar</a>
-                            <form action="{{ url_for('delete_paciente', id_paciente=paciente[0]) }}" method="POST" style="display: inline;">
-                                <button type="submit" class="btn-borrar">Borrar</button>
-                            </form>
-                            <a href="{{ url_for('agg_prueba', id_paciente=paciente[0]) }}" class="btn-agg">Agregar prueba</a>
-                            <td>
-                                <a href="{{ url_for('pruebas', id_paciente=paciente[0]) }}" class="btn-primary">Ver Pruebas</a>
-                            </td>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="styled-table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr> 
+                    </thead>
+                    <tbody>
+                        {% for paciente in pacientes %}
+                            <tr>
+                                <td><a href="{{ url_for('pruebas', id_paciente=paciente[0]) }}">{{ paciente[1] }}</a></td>
+                                <td>{{ paciente[2] }}</td>
+                                <td>{{ paciente[3] }}</td>
+                                <td>{{ paciente[4] }}</td>
+                                <td>{{ paciente[5] }}</td>
+                                <td>
+                                    <a href="{{ url_for('update_paciente', id_paciente=paciente[0]) }}" class="btn btn-sm btn-warning">Editar</a>
+                                    <form action="{{ url_for('delete_paciente', id_paciente=paciente[0]) }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger">Borrar</button>
+                                    </form>
+                                    <a href="{{ url_for('agg_prueba', id_paciente=paciente[0]) }}" class="btn btn-sm btn-info">Agregar prueba</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% else %}
-            <p>No hay pacientes para mostrar.</p>
+                <div class="alert alert-info mt-3">No hay pacientes para mostrar.</div>
             {% endif %}
-        </section>
-    </main>
-    {% endblock %}
-</body>
-</html>
+        </div>
+    </section>
+    
+    <!-- Estadísticas del Laboratorio -->
+    <section id="estadisticas" class="mb-5">
+        <div class="container-estadisticas">
+            <h2">Estadísticas del Laboratorio</h2>
+            <p>Total de pacientes registrados: <strong>{{ total_pacientes }}</strong></p>
+            <p>Total de pruebas realizadas: <strong>{{ total_pruebas }}</strong></p>
+        </div>
+    </section>
+    
+    <!-- Acceso Rápido -->
+    <section id="acceso-rapido" class="mb-5">  
+        <div class="container-access">
+            <h2 class="text-center">Acceso Rápido</h2>
+            <p class="text-center"><a href="{{ url_for('agg_paciente') }}" class="btn btn-primary">Nuevo paciente</a></p>
+        </div>
+    </section>
+</main>
+{% endblock %}

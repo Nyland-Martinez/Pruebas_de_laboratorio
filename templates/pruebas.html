@@ -1,51 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Lista de pruebas</title>
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block title %}Pacientes{% endblock %}
+
 {% block content %}
-    <h1>Lista de pruebas</h1>
-    <a href="{{ url_for('agg_prueba', id_paciente=id_paciente) }}">Agregar una nueva prueba</a>
+<div class="container mt-5">
+    <h2>Lista de Pruebas</h2>
+    <a href="{{ url_for('agg_prueba', id_paciente=id_paciente) }}" class="btn btn-primary mb-3">Agregar una nueva prueba</a>
+
     {% if pruebas %}
-    <table>
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID de paciente</th>
-                <th>Tipo de prueba</th>
-                <th>Fecha de prueba</th>
+                <th>ID de Paciente</th>
+                <th>Tipo de Prueba</th>
+                <th>Fecha de Prueba</th>
                 <th>Descripción</th>
                 <th>Acciones</th>
-            </tr> 
+            </tr>
         </thead>
         <tbody>
             {% for prueba in pruebas %}
             <tr>
                 <td>{{ prueba[1] }}</td>
-                <td>{{ prueba[2] }}</td>
+                <td>
+                    <a href="{{ url_for('resultados', id_prueba=prueba[0]) }}" class="text-decoration-none">
+                        {{ prueba[2] }}
+                    </a>
+                </td>
                 <td>{{ prueba[3] }}</td>
                 <td>{{ prueba[4] }}</td>
                 <td>
-                    <a href="{{ url_for('update_prueba', id_prueba=prueba[0]) }}" class="btn-edit">
-                        Editar
-                    </a>
+                    <a href="{{ url_for('update_prueba', id_prueba=prueba[0]) }}" class="btn btn-sm btn-warning">Editar</a>
                     <form action="{{ url_for('delete_prueba', id_prueba=prueba[0]) }}" method="POST" style="display: inline;">
-                        <button class="btn-borrar" type="submit">Borrar</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Borrar</button>
                     </form>
-                    <a href="{{ url_for('resultados', id_prueba=prueba[0]) }}" class="btn-primary">
-                        Resultado
-                    </a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% else %}
-    <p>No hay pruebas para mostrar.</p>
+    <p class="alert alert-info">No hay pruebas para mostrar.</p>
     {% endif %}
+
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Volver a la página de pacientes</a>
+</div>
 {% endblock %}
-</body>
-</html>

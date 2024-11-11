@@ -18,6 +18,14 @@ mysql = MySQL(app)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     cur = mysql.connection.cursor()
+
+    # Contar el total de pacientes
+    cur.execute("SELECT COUNT(*) FROM Pacientes")
+    total_pacientes = cur.fetchone()[0]
+
+    # Contar el total de pruebas
+    cur.execute("SELECT COUNT(*) FROM Pruebas")
+    total_pruebas = cur.fetchone()[0]
     
     if request.method == 'POST':
         # Obtener el valor de búsqueda ingresado
@@ -31,7 +39,7 @@ def index():
     
     pacientes = cur.fetchall()
     cur.close()
-    return render_template('index.html', pacientes=pacientes)
+    return render_template('index.html', pacientes=pacientes, total_pacientes=total_pacientes, total_pruebas=total_pruebas)
 
 # Leer prueba
 @app.route('/pruebas/<int:id_paciente>')
@@ -109,13 +117,13 @@ def agg_prueba(id_paciente):
         cursor.close()
         
         # Redirigir para agregar resultados a esta prueba específica
-        return redirect(url_for('agg_resultados', id_prueba=id_prueba))
+        return redirect(url_for('agg_resultado', id_prueba=id_prueba))
 
     return render_template('agg_prueba.html', id_paciente=id_paciente)
 
 # Ruta para crear resultados de una prueba
-@app.route('/agg_resultados/<int:id_prueba>', methods=['GET', 'POST'])
-def agg_resultados(id_prueba):
+@app.route('/agg_resultado/<int:id_prueba>', methods=['GET', 'POST'])
+def agg_resultado(id_prueba):
     if request.method == 'POST':
         parametro = request.form['parametro']
         valor = request.form['valor']
@@ -134,9 +142,9 @@ def agg_resultados(id_prueba):
         print(f"Resultado agregado para la prueba ID: {id_prueba}")  # Mensaje de depuración
         
         # Redirigir a la página de resultados después de agregar un resultado
-        return redirect(url_for('resultados', id_prueba=id_prueba))
+        return redirect(url_for('agg_resultado', id_prueba=id_prueba))
 
-    return render_template('agg_resultados.html', id_prueba=id_prueba)
+    return render_template('agg_resultado.html', id_prueba=id_prueba)
 
 # Ruta para actualizar un paciente
 @app.route('/edit_paciente/<int:id_paciente>', methods=['GET', 'POST'])

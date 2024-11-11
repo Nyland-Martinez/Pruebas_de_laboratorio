@@ -1,33 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Editar paciente</title>
-</head>
-<body>
-    {% block content %}
-    <h1>Formulario de edición</h1>
-    <form action="{{ url_for('update_paciente', id_paciente=paciente[0]) }}" method="POST">
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" name="nombre" value="{{ paciente[1] }}" required><br>
+{% extends "layout.html" %}
+
+{% block title %}Editar Paciente{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <h2 class="text-center">Formulario de edición</h2>
+    <form action="{{ url_for('update_paciente', id_paciente=paciente[0]) }}" method="POST" class="mt-4">
+        <div class="mb-3">
+            <label class="form-label" for="name">Nombre:</label>
+            <input class="form-control" type="text" id="name" name="nombre" value="{{ paciente[1] }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="apellido">Apellido:</label>
+            <input class="form-control" type="text" id="apellido" name="apellido" value="{{ paciente[2] }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="fecha_nacimiento">Fecha de Nacimiento:</label>
+            <input class="form-control" type="text" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ paciente[3] }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="direccion">Dirección:</label>
+            <input class="form-control" type="text" id="direccion" name="direccion" value="{{ paciente[4] }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="telefono">Teléfono:</label>
+            <input class="form-control" type="text" id="telefono" name="telefono" value="{{ paciente[5] }}" required>
+        </div>
         
-        <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" name="apellido" value="{{ paciente[2] }}" required><br>
-        
-        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-        <input type="text" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ paciente[3] }}" required><br>
-        
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" value="{{ paciente[4] }}" required><br>
-        
-        <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" name="telefono" value="{{ paciente[5] }}" required><br>
-        
-        <button class="btn-edit" type="submit">Actualizar</button>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary r" type="submit">Actualizar</button>
+            <a href="{{ url_for('index')}}" class="btn btn-secondary ms-2 ">Volver a la página de inicio</a>
+        </div>
     </form>    
-    <a href="{{ url_for('index')}}">Volver a la página de inicio</a>
-    {% endblock %}
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,37 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Editar resultado</title>
-</head>
-<body>
-    {% block content %}
-    <h1>Formulario de edición de resultado</h1>
-    <form action="{{ url_for('update_resultado', id_resultados=id_resultados) }}" method="POST">
+{% extends "layout.html" %}
 
-        <label for="id_prueba">ID de prueba:</label>
-        <input type="number" id="id_prueba" name="id_prueba" value="{{ resultado[1] }}" required><br>
+{% block title %}Editar Prueba{% endblock %}
+
+{% block content %}
+<div class="container mt-6" style="max-width: 500px;">
+    <h2 class="text-center">Formulario de edición de resultado</h2>
+    <form action="{{ url_for('update_resultado', id_resultados=id_resultados) }}" method="POST" class="mt-5">
+        <div class="mb-4">
+            <label for="id_prueba" class="form-label">ID de prueba:</label>
+            <input class="form-control" type="number" id="id_prueba" name="id_prueba" value="{{ resultado[1] }}" required>
+        </div>
         
-        <label for="parametro">Parámetro:</label>
-        <input type="text" id="parametro" name="parametro" value="{{ resultado[2] }}" required placeholder="Ingrese el parámetro"><br>
+        <div class="mb-4">
+            <label for="parametro" class="form-label">Parámetro:</label>
+            <input class="form-control" type="text" id="parametro" name="parametro" value="{{ resultado[2] }}" required placeholder="Ingrese el parámetro">
+        </div>
         
-        <label for="valor">Valor:</label>
-        <input type="number" id="valor" step="0.01" name="valor" value="{{ resultado[3] }}" required placeholder="Ingrese el valor"><br>
+        <div class="mb-4">
+            <label for="valor" class="form-label">Valor:</label>
+            <input class="form-control" type="number" id="valor" step="0.01" name="valor" value="{{ resultado[3] }}" required placeholder="Ingrese el valor">
+        </div>
         
-        <label for="unidad">Unidad:</label>
-        <input type="text" id="unidad" name="unidad" value="{{ resultado[4] }}" required placeholder="Ingrese la unidad"><br>
+        <div class="mb-4">
+            <label for="unidad" class="form-label">Unidad:</label>
+            <input class="form-control" type="text" id="unidad" name="unidad" value="{{ resultado[4] }}" required placeholder="Ingrese la unidad">
+        </div>
         
-        <label for="rango_min">Rango Mínimo:</label>
-        <input type="number" id="rango_min" step="0.01" name="rango_min" value="{{ resultado[5] }}" required placeholder="Ingrese el rango mínimo"><br>
+        <div class="mb-4">
+            <label for="rango_min" class="form-label">Rango Mínimo:</label>
+            <input class="form-control" type="number" id="rango_min" step="0.01" name="rango_min" value="{{ resultado[5] }}" required placeholder="Ingrese el rango mínimo">
+        </div>
         
-        <label for="rango_max">Rango Máximo:</label>
-        <input type="number" id="rango_max" step="0.01" name="rango_max" value="{{ resultado[6] }}" required placeholder="Ingrese el rango máximo"><br>
-        
-        <button class="btn-edit" type="submit">Actualizar</button>
+        <div class="mb-4">
+            <label for="rango_max" class="form-label">Rango Máximo:</label>
+            <input class="form-control" type="number" id="rango_max" step="0.01" name="rango_max" value="{{ resultado[6] }}" required placeholder="Ingrese el rango máximo">
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" type="submit text-center">Actualizar</button>
+            <a href="{{ url_for('resultados', id_prueba=id_prueba) }}" class="btn btn-secondary ms-3 text-center">Volver a la página de resultados</a>
+        </div>
     </form>    
-    <a href="{{ url_for('resultados', id_prueba=id_prueba) }}">Volver a la página de resultados</a>
-    {% endblock %}
-</body>
-</html>
+</div>
+{% endblock %}

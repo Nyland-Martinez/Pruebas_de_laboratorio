@@ -1,32 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Formulario de pruebas</title>
-</head>
-<body>
-    {% block content %}
-    <h1>Agregar Prueba</h1>
-    <form action="{{ url_for('agg_prueba', id_paciente=id_paciente) }}" method="POST">
-        <label>Tipo de prueba:</label>
-        <select id="nombre_tipo_prueba" name="nombre_tipo_prueba" required>
-            <option value="Hemograma">Hemograma</option>
-            <option value="Perfil Lipídico">Perfil Lipídico</option>
-            <option value="Glucosa en sangre">Glucosa en sangre</option>
-        </select><br>
-        
-        <label>Fecha de la prueba:</label>
-        <input type="text" id="fecha" name="fecha" required><br>
+{% extends "layout.html" %}
 
-        <label>Descripción:</label>
-        <textarea id="descripcion" name="descripcion" required></textarea><br>
+{% block title %}Formulario de Pruebas{% endblock %}
+
+{% block content %}
+<div class="container mt-3" style="max-width: 500px;">
+    <h2 class="text-center">Agregar Prueba</h2>
+    <form action="{{ url_for('agg_prueba', id_paciente=id_paciente) }}" method="POST" class="mt-3">
         
-        <button class="btn-agg" type="submit">Enviar</button>
+        <div class="mb-3">
+            <label for="nombre_tipo_prueba" class="form-label">Tipo de prueba:</label>
+            <select id="nombre_tipo_prueba" name="nombre_tipo_prueba" class="form-select" required>
+                <option value="Hemograma">Hemograma</option>
+                <option value="Perfil Lipídico">Perfil Lipídico</option>
+                <option value="Glucosa en sangre">Glucosa en sangre</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha de la prueba:</label>
+            <input type="text" id="fecha" name="fecha" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" rows="3" required></textarea>
+        </div>
+        
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+            <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}" class="btn btn-secondary ms-2">Volver a la página de pruebas</a>
+        </div>
     </form>
-    
-    <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}">Volver a la página de pruebas</a>
-    {% endblock %}   
-</body>
-</html>
+</div>
+{% endblock %}  

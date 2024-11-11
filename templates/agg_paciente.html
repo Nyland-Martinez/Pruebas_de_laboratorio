@@ -1,32 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Formulario de paciente</title>
-</head>
-<body>
-    {% block content %}
-    <form action="{{ url_for('agg_paciente') }}" method="POST">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required><br>
+{% extends "layout.html" %}
+
+{% block title %}Formulario de Pacientes{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <h2 class="text-center">Agregar Paciente</h2>
+    <form action="{{ url_for('agg_paciente') }}" method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" name="nombre" id="nombre" class="form-control" required>
+        </div>
         
-        <label>Apellido:</label>
-        <input type="text" name="apellido" required><br>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido:</label>
+            <input type="text" name="apellido" id="apellido" class="form-control" required>
+        </div>
         
-        <label>Fecha de Nacimiento:</label>
-        <input type="text" name="fecha_nacimiento" required><br>
+        <div class="mb-3">
+            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento:</label>
+            <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" required>
+        </div>
         
-        <label>Dirección:</label>
-        <input type="text" name="direccion" required><br>
+        <div class="mb-3">
+            <label for="direccion" class="form-label">Dirección:</label>
+            <input type="text" name="direccion" id="direccion" class="form-control" required>
+        </div>
         
-        <label>Teléfono:</label>
-        <input type="text" name="telefono" required><br>
+        <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono:</label>
+            <input type="text" name="telefono" id="telefono" class="form-control" required>
+        </div>
         
-        <button class="btn-agg" type="submit">Enviar</button>
-    </form>    
-    <a href="{{ url_for('index')}}">Volver a la página de inicio</a>
-    {% endblock %}
-</body>
-</html>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary ms-2">Volver a la página de inicio</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

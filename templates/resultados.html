@@ -1,51 +1,54 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Resultado de una prueba</title>
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block title %}Resultados de la Prueba{% endblock %}
+
 {% block content %}
-    <h1>Resultados de la prueba: {{ nombre_tipo_prueba }}</h1>
-    <a href="{{ url_for('agg_resultados', id_prueba=id_prueba) }}">Agregar parámetros</a>
-    {% if resultados %}
-    <table>
-        <thead>
-            <tr>
-                <th>ID de prueba</th>
-                <th>Parámetros</th>
-                <th>Valor</th>
-                <th>Unidad</th>
-                <th>Rango mínimo</th>
-                <th>Rango máximo</th>
-                <th>Acciones</th>
-            </tr> 
-        </thead>
-        <tbody>
-            {% for resultado in resultados %}
-            <tr>
-                <td>{{resultado[1]}}</td>
-                <td>{{resultado[2]}}</td>
-                <td>{{resultado[3]}}</td>
-                <td>{{resultado[4]}}</td>
-                <td>{{resultado[5]}}</td>
-                <td>{{resultado[6]}}</td>
-                <td>
-                    <a href="{{ url_for('update_resultado', id_resultados=resultado[0]) }}" class="btn-edit">Editar</a>
-                    <form action="{{ url_for('delete_resultado', id_resultados=resultado[0]) }}" method="POST" style="display: inline;">
-                        <button class="btn-borrar" type="submit">Borrar</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No hay resultado para mostrar.</p>
-    {% endif %}
-    <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}">Volver a la página de pruebas</a>
-{% endblock %}
+<body>
+    <div class="container">
+        <h1 class="my-4">Resultados de la prueba: {{ nombre_tipo_prueba }}</h1>
+        
+        <!-- Botón para agregar un nuevo parámetro -->
+        <a href="{{ url_for('agg_resultado', id_prueba=id_prueba) }}" class="btn btn-primary mb-3">Agregar Parámetros</a>
+        
+        <!-- Tabla de Resultados -->
+        {% if resultados %}
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ID de prueba</th>
+                        <th>Parámetros</th>
+                        <th>Valor</th>
+                        <th>Unidad</th>
+                        <th>Rango mínimo</th>
+                        <th>Rango máximo</th>
+                        <th>Acciones</th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    {% for resultado in resultados %}
+                    <tr>
+                        <td>{{ resultado[1] }}</td>
+                        <td>{{ resultado[2] }}</td>
+                        <td>{{ resultado[3] }}</td>
+                        <td>{{ resultado[4] }}</td>
+                        <td>{{ resultado[5] }}</td>
+                        <td>{{ resultado[6] }}</td>
+                        <td>
+                            <a href="{{ url_for('update_resultado', id_resultados=resultado[0]) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <form action="{{ url_for('delete_resultado', id_resultados=resultado[0]) }}" method="POST" style="display: inline;">
+                                <button class="btn btn-danger btn-sm" type="submit">Borrar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="mt-3">No hay resultados para mostrar.</p>
+        {% endif %}
+
+        <!-- Enlace de retorno -->
+        <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}" class="btn btn-secondary mt-3">Volver a la página de pruebas</a>
+    </div>
 </body>
-</html>
+{% endblock %}

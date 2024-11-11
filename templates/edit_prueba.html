@@ -1,36 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% extends "layout.html" %}
-    <title>Editar prueba</title>
-</head>
-<body>
-    {% block content %}
-    <h1>Formulario de edición de la prueba</h1>
-    <form action="{{ url_for('update_prueba', id_prueba=id_prueba) }}" method="POST">
+{% extends "layout.html" %}
+
+{% block title %}Editar Prueba{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+    <h2 class="text-center">Formulario de edición de la prueba</h2>
+    <form action="{{ url_for('update_prueba', id_prueba=id_prueba) }}" method="POST" class="mt-3">
+        <div class="mb-2">
+            <label class="form-label" for="id_paciente">ID de paciente:</label>
+            <input class="form-control" type="number" id="id_paciente" name="id_paciente" value="{{ prueba[1] }}" required>
+        </div>
+
+        <div class="mb-2">
+            <label class="form-label" for="nombre_tipo_prueba">Tipo de prueba:</label>
+            <select id="nombre_tipo_prueba" name="nombre_tipo_prueba" required>
+                <option value="Hemograma" {% if prueba[2] == 'Hemograma' %}selected{% endif %}>Hemograma</option>
+                <option value="Perfil Lipídico" {% if prueba[2] == 'Perfil Lipídico' %}selected{% endif %}>Perfil Lipídico</option>
+                <option value="Glucosa en sangre" {% if prueba[2] == 'Glucosa en sangre' %}selected{% endif %}>Glucosa en sangre</option>
+                <!-- Agrega más opciones si es necesario -->
+            </select>
+        </div>
         
-        <label for="id_paciente">ID de paciente:</label>
-        <input type="number" id="id_paciente" name="id_paciente" value="{{ prueba[1] }}" required><br>
+        <div class="mb-2">
+            <label class="form-label" for="fecha">Fecha de la prueba:</label>
+            <input class="form-control" type="text" id="fecha" name="fecha" value="{{ prueba[3] }}" required>
+        </div>
 
-        <label for="nombre_tipo_prueba">Tipo de prueba:</label>
-        <select id="nombre_tipo_prueba" name="nombre_tipo_prueba" required>
-            <option value="Hemograma" {% if prueba[2] == 'Hemograma' %}selected{% endif %}>Hemograma</option>
-            <option value="Perfil Lipídico" {% if prueba[2] == 'Perfil Lipídico' %}selected{% endif %}>Perfil Lipídico</option>
-            <option value="Glucosa en sangre" {% if prueba[2] == 'Glucosa en sangre' %}selected{% endif %}>Glucosa en sangre</option>
-            <!-- Agrega más opciones si es necesario -->
-        </select><br>
-
-        <label for="fecha">Fecha de la prueba:</label>
-        <input type="text" id="fecha" name="fecha" value="{{ prueba[3] }}" required><br>
-
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" name="descripcion" required>{{ prueba[4] }}</textarea>
+        <div class="form-label" class="mb-2">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" required>{{ prueba[4] }}</textarea>
+        </div>
         
-        <button class="btn-edit" type="submit">Actualizar</button>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" type="submit">Actualizar</button>
+            <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}" class="btn btn-secondary ms-2">Volver a la página de pruebas</a>
+        </div>
     </form>    
-    <a href="{{ url_for('pruebas', id_paciente=id_paciente) }}">Volver a la página de pruebas</a>
-    {% endblock %}
-</body>
-</html>
+</div>
+{% endblock %}
